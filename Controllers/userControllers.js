@@ -11,16 +11,20 @@ const authUser = asyncHandler(async (req, res) => {
     try {
       const isValidPassword = await user.matchPassword(password);
       if (isValidPassword) {
+        console.log("Password is correct");
+        console.log("user._id:", user._id);
         const token = generateToken(user._id);
         res.send({ token });
         console.log("user logged in");
       } else {
-        res.send({ error: "Email or Password invalid" });
+        console.log("password not correct");
+        res.send({ passworderror: "Password incorrect" });
       }
     } catch (err) {
-      return res
-        .status(422)
-        .send({ error_password: "user password incorrect" });
+      console.log("error", err);
+      return res.send({
+        error_password: "user password incorrect",
+      });
     }
 
     /* res.json({
@@ -34,7 +38,8 @@ const authUser = asyncHandler(async (req, res) => {
          throw new Error("Invalid Email or Password");
      }*/
   } else {
-    return res.status(422).send({ email_error: "email not correct" });
+    console.log("User not found");
+    return res.send({ email_error: "email not correct" });
   }
 });
 
