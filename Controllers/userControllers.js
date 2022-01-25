@@ -7,24 +7,21 @@ const authUser = asyncHandler(async (req, res) => {
   console.log("@@ 1 @@", email, password);
   const user = await User.findOne({ email });
   console.log("@@ 2 @@", user);
+
   if (user) {
     try {
       const isValidPassword = await user.matchPassword(password);
       if (isValidPassword) {
-        console.log("Password is correct");
-        console.log("user._id:", user._id);
         const token = generateToken(user._id);
-        res.send({ token });
-        console.log("user logged in");
+        console.log("token=", token);
+
+        res.send({ token: token });
       } else {
         console.log("password not correct");
         res.send({ passworderror: "Password incorrect" });
       }
     } catch (err) {
       console.log("error", err);
-      return res.send({
-        error_password: "user password incorrect",
-      });
     }
 
     /* res.json({
@@ -38,8 +35,8 @@ const authUser = asyncHandler(async (req, res) => {
          throw new Error("Invalid Email or Password");
      }*/
   } else {
-    console.log("User not found");
-    return res.send({ email_error: "email not correct" });
+    console.log("User ma famech");
+    res.send({ email_error: "email not correct" });
   }
 });
 
